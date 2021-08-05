@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="18122" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="N8h-YD-r0X">
+    <device id="retina4_7" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Main View Controller-->
+        <scene sceneID="wdx-bS-4nS">
+            <objects>
+                <viewController storyboardIdentifier="mainView" useStoryboardIdentifierAsRestorationIdentifier="YES" id="N8h-YD-r0X" customClass="MainViewController" customModule="ARVideoKit_Example" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="lKA-5t-IIG">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tQf-dN-lB4">
+                                <rect key="frame" x="8" y="268" width="359" height="60"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <fontDescription key="fontDescription" name="Avenir-Medium" family="Avenir" pointSize="18"/>
+                                <state key="normal" title="Start Lidar Recording"/>
+                                <connections>
+                                    <segue destination="7Ze-pj-Xqd" kind="show" id="93E-6x-10b"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="2zo-8C-5Jz"/>
+                        <color key="backgroundColor" systemColor="darkTextColor"/>
+                    </view>
+                    <connections>
+                        <outlet property="skBtn" destination="tQf-dN-lB4" id="Zfs-NO-PMo"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="bSs-NK-rzw" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-724" y="454"/>
+        </scene>
+        <!--SCNViewController-->
+        <scene sceneID="tne-QT-ifu">
+            <objects>
+                <viewController storyboardIdentifier="scnView" title="SCNViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="BYZ-38-t0r" customClass="SCNViewController" customModule="ARVideoKit_Example" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <arscnView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="IMN-9B-haO">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                            </arscnView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="AR w/ SceneKit" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fCR-qg-FqO">
+                                <rect key="frame" x="97" y="0.0" width="181" height="65"/>
+                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="0.65000000000000002" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="181" id="1KA-s7-g4z"/>
+                                    <constraint firstAttribute="height" constant="65" id="iEp-dp-Npu"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1R6-Xa-VsB">
+                                <rect key="frame" x="155" y="582" width="65" height="65"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="65" id="cLz-mD-mSz"/>
+                                    <constraint firstAttribute="height" constant="65" id="o9A-Qb-y82"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                <size key="titleShadowOffset" width="0.0" height="1"/>
+                                <state key="normal" title="Record">
+                                    <color key="titleShadowColor" white="0.0" alpha="0.65000000000000002" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </state>
+                                <connections>
+                                    <action selector="record:" destination="BYZ-38-t0r" eventType="touchUpInside" id="JgG-TM-lv4"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" tag="2" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pCi-Bx-pwj">
+                                <rect key="frame" x="294" y="582" width="65" height="65"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="65" id="6KM-Tw-tmw"/>
+                                    <constraint firstAttribute="height" constant="65" id="O1o-qf-3Fu"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                <size key="titleShadowOffset" width="0.0" height="1"/>
+                                <state key="normal" title="Pause">
+                                    <color key="titleShadowColor" white="0.0" alpha="0.65000000000000002" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </state>
+                                <connections>
+                                    <action selector="record:" destination="BYZ-38-t0r" eventType="touchUpInside" id="jb7-xY-Yzq"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="p4z-aP-wTO">
+                                <rect key="frame" x="155" y="509" width="65" height="65"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="65" id="OwG-7I-c6K"/>
+                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="65" id="Pzc-zO-TnM"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                <size key="titleShadowOffset" width="0.0" height="1"/>
+                                <state key="normal" title="Photo">
+                                    <color key="titleShadowColor" white="0.0" alpha="0.65000000000000002" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </state>
+                                <connections>
+                                    <action selector="capture:" destination="BYZ-38-t0r" eventType="touchUpInside" id="azX-le-8x1"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VIM-JP-UzO">
+                                <rect key="frame" x="16" y="509" width="65" height="65"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="65" id="Hnb-Ci-6HG"/>
+                                    <constraint firstAttribute="height" constant="65" id="V2R-5O-za1"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                <size key="titleShadowOffset" width="0.0" height="1"/>
+                                <state key="normal" title="Live Photo">
+                                    <color key="titleShadowColor" white="0.0" alpha="0.65000000000000002" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </state>
+                                <connections>
+                                    <action selector="capture:" destination="BYZ-38-t0r" eventType="touchUpInside" id="qYF-sf-zAw"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="DJd-jZ-eqw">
+                                <rect key="frame" x="16" y="582" width="61" height="65"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="65" id="Ljt-Ba-yLn"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                <size key="titleShadowOffset" width="0.0" height="1"/>
+                                <state key="normal" title="w/Duration">
+                                    <color key="titleShadowColor" white="0.0" alpha="0.65000000000000002" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </state>
+                                <connections>
+                                    <action selector="record:" destination="BYZ-38-t0r" eventType="touchUpInside" id="cCM-2e-cmS"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" tag="2" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Sdu-XX-UpW">
+                                <rect key="frame" x="294" y="509" width="65" height="65"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="65" id="4M4-BS-0Sv"/>
+                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="65" id="HYl-9u-ZrZ"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                <size key="titleShadowOffset" width="0.0" height="1"/>
+                                <state key="normal" title="GIF">
+                                    <color key="titleShadowColor" white="0.0" alpha="0.65000000000000002" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </state>
+                                <connections>
+                                    <action selector="capture:" destination="BYZ-38-t0r" eventType="touchUpInside" id="MfT-Pq-JTC"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="69u-dy-9On">
+                                <rect key="frame" x="7" y="0.0" width="65" height="65"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="65" id="IPA-eO-hiu"/>
+                                    <constraint firstAttribute="height" constant="65" id="jVv-es-uhg"/>
+                                </constraints>
+                                <size key="titleShadowOffset" width="0.0" height="1"/>
+                                <state key="normal" title="Go Back">
+                                    <color key="titleShadowColor" white="0.0" alpha="0.65000000000000002" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </state>
+                                <connections>
+                                    <action selector="goBack:" destination="BYZ-38-t0r" eventType="touchUpInside" id="93X-Zy-W33"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
+                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="69u-dy-9On" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="7" id="0m6-4F-0Fh"/>
+                            <constraint firstItem="IMN-9B-haO" firstAttribute="height" secondItem="8bC-Xf-vdC" secondAttribute="height" id="4lt-V9-t2E"/>
+                            <constraint firstItem="VIM-JP-UzO" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="55A-z8-Ex1"/>
+                            <constraint firstItem="DJd-jZ-eqw" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="16" id="8OL-Px-2eA"/>
+                            <constraint firstItem="IMN-9B-haO" firstAttribute="width" secondItem="8bC-Xf-vdC" secondAttribute="width" id="CTc-LN-wCc"/>
+                            <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="DJd-jZ-eqw" secondAttribute="trailing" constant="20" symbolic="YES" id="HGC-TK-HJa"/>
+                            <constraint firstItem="fCR-qg-FqO" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="LBh-YU-azl"/>
+                            <constraint firstItem="pCi-Bx-pwj" firstAttribute="top" secondItem="Sdu-XX-UpW" secondAttribute="bottom" constant="8" id="QWb-Ny-0gu"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="DJd-jZ-eqw" secondAttribute="bottom" constant="20" id="RM8-T4-5Bb"/>
+                            <constraint firstItem="pCi-Bx-pwj" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="8bC-Xf-vdC" secondAttribute="leading" constant="20" symbolic="YES" id="SS1-gr-BzS"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="pCi-Bx-pwj" secondAttribute="bottom" constant="20" id="XbC-b0-mFd"/>
+                            <constraint firstItem="Sdu-XX-UpW" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="8bC-Xf-vdC" secondAttribute="leading" constant="20" symbolic="YES" id="YAC-cY-3mG"/>
+                            <constraint firstItem="IMN-9B-haO" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="YZD-q7-Vr8"/>
+                            <constraint firstItem="fCR-qg-FqO" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="Yjw-Vh-dmb"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="Sdu-XX-UpW" secondAttribute="trailing" constant="16" id="a7G-NE-FuY"/>
+                            <constraint firstItem="1R6-Xa-VsB" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="aDC-0U-rEb"/>
+                            <constraint firstItem="IMN-9B-haO" firstAttribute="centerY" secondItem="6Tk-OE-BBY" secondAttribute="centerY" id="awb-Ub-ogs"/>
+                            <constraint firstItem="69u-dy-9On" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="bIZ-at-yZb"/>
+                            <constraint firstItem="p4z-aP-wTO" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="eIW-wL-nut"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="1R6-Xa-VsB" secondAttribute="bottom" constant="20" id="g6C-dt-mSp"/>
+                            <constraint firstItem="1R6-Xa-VsB" firstAttribute="top" secondItem="p4z-aP-wTO" secondAttribute="bottom" constant="8" id="gd7-UD-shK"/>
+                            <constraint firstItem="DJd-jZ-eqw" firstAttribute="bottom" secondItem="VIM-JP-UzO" secondAttribute="bottom" constant="73" id="oes-gl-dgB"/>
+                            <constraint firstAttribute="trailing" secondItem="VIM-JP-UzO" secondAttribute="trailing" constant="294" id="shb-pG-gjl"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="pCi-Bx-pwj" secondAttribute="trailing" constant="16" id="shk-Bc-iV7"/>
+                            <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="69u-dy-9On" secondAttribute="trailing" constant="20" symbolic="YES" id="veA-fi-fX6"/>
+                        </constraints>
+                    </view>
+                    <nil key="simulatedTopBarMetrics"/>
+                    <connections>
+                        <outlet property="pauseBtn" destination="pCi-Bx-pwj" id="Vbx-Qf-GiU"/>
+                        <outlet property="recordBtn" destination="1R6-Xa-VsB" id="xFW-bY-b3A"/>
+                        <outlet property="sceneView" destination="IMN-9B-haO" id="6l9-yC-XES"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="53.600000000000001" y="865.81709145427294"/>
+        </scene>
+        <!--SKViewController-->
+        <scene sceneID="emy-Ex-RPU">
+            <objects>
+                <viewController storyboardIdentifier="skView" title="SKViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="7Ze-pj-Xqd" customClass="SKViewController" customModule="ARVideoKit_Example" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="ChF-2c-u6U">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="647"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <arskView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="r4A-6V-dWs">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="647"/>
+                            </arskView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Smn-x8-1pS">
+                                <rect key="frame" x="155" y="562" width="65" height="65"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="65" id="TY7-87-RTT"/>
+                                    <constraint firstAttribute="height" constant="65" id="iLj-W7-AjF"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                <size key="titleShadowOffset" width="0.0" height="1"/>
+                                <state key="normal" title="Record">
+                                    <color key="titleShadowColor" white="0.0" alpha="0.65000000000000002" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </state>
+                                <connections>
+                                    <action selector="record:" destination="7Ze-pj-Xqd" eventType="touchUpInside" id="mXe-pS-LVC"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="o5K-aw-fHf">
+                                <rect key="frame" x="16" y="0.0" width="65" height="65"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="65" id="NXz-p7-PDZ"/>
+                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="65" id="mTk-zS-NIf"/>
+                                </constraints>
+                                <size key="titleShadowOffset" width="0.0" height="1"/>
+                                <state key="normal" title="Go Back">
+                                    <color key="titleShadowColor" white="0.0" alpha="0.65000000000000002" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </state>
+                                <connections>
+                                    <action selector="goBack:" destination="7Ze-pj-Xqd" eventType="touchUpInside" id="Hu9-W8-HU1"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="CAg-r7-4KE"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="Smn-x8-1pS" firstAttribute="centerX" secondItem="CAg-r7-4KE" secondAttribute="centerX" id="0n9-hj-kdP"/>
+                            <constraint firstItem="r4A-6V-dWs" firstAttribute="height" secondItem="ChF-2c-u6U" secondAttribute="height" id="19x-5I-dH9"/>
+                            <constraint firstItem="r4A-6V-dWs" firstAttribute="centerY" secondItem="CAg-r7-4KE" secondAttribute="centerY" id="DCR-Zw-vG0"/>
+                            <constraint firstItem="o5K-aw-fHf" firstAttribute="leading" secondItem="CAg-r7-4KE" secondAttribute="leading" constant="16" id="GtG-yg-RPx"/>
+                            <constraint firstItem="o5K-aw-fHf" firstAttribute="top" secondItem="CAg-r7-4KE" secondAttribute="top" id="Mqb-e9-X1L"/>
+                            <constraint firstItem="r4A-6V-dWs" firstAttribute="width" secondItem="ChF-2c-u6U" secondAttribute="width" id="aXu-PW-GZf"/>
+                            <constraint firstItem="r4A-6V-dWs" firstAttribute="centerX" secondItem="CAg-r7-4KE" secondAttribute="centerX" id="hLH-pU-8s8"/>
+                            <constraint firstItem="CAg-r7-4KE" firstAttribute="bottom" secondItem="Smn-x8-1pS" secondAttribute="bottom" constant="20" id="sVP-Le-pHy"/>
+                            <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="o5K-aw-fHf" secondAttribute="trailing" constant="20" symbolic="YES" id="w51-NJ-Ls3"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="SKSceneView" destination="r4A-6V-dWs" id="ksi-TV-Ngg"/>
+                        <outlet property="recordBtn" destination="Smn-x8-1pS" id="2WJ-1z-csU"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="9if-am-XF6" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="53.600000000000001" y="133.5832083958021"/>
+        </scene>
+    </scenes>
+    <resources>
+        <systemColor name="darkTextColor">
+            <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+    </resources>
+</document>
