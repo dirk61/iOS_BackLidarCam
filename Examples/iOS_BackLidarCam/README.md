@@ -11,7 +11,7 @@ An example using ARVideoKit for simultaneous Lidar Depth Map Capture & Video Rec
 * a **txt** file recording the timestamp of each depth frame for future synchronization
 
 
-![image](https://github.com/dirk61/iOS_BackLidarCam/blob/master/images/IMG_3964.PNG =400x800)
+![image](https://github.com/dirk61/iOS_BackLidarCam/blob/master/images/IMG_3964.PNG){:height="50%" width="50%"}
 
 
 
