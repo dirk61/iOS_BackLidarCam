@@ -11,8 +11,7 @@ An example using ARVideoKit for simultaneous Lidar Depth Map Capture & Video Rec
 * a **txt** file recording the timestamp of each depth frame for future synchronization
 
 
-
-![image](https://github.com/dirk61/iOS_BackLidarCam/blob/master/images/1555b7ed-b9fe-4ab8-b6c9-29f40c35d2b0.png)
+![image](https://github.com/dirk61/iOS_BackLidarCam/blob/master/images/IMG_3964.PNG!/scale/30)
 
 
 
@@ -20,4 +19,5 @@ An example using ARVideoKit for simultaneous Lidar Depth Map Capture & Video Rec
 
 Follow the instructions in the Jupiter notebook. You can retrieve all the frames in arrays and do whatever you want, e.g. generate a depth video.
 
-![image](https://github.com/dirk61/iOS_BackLidarCam/blob/master/images/IMG_3964.PNG)
+
+![image](https://github.com/dirk61/iOS_BackLidarCam/blob/master/images/1555b7ed-b9fe-4ab8-b6c9-29f40c35d2b0.png)
