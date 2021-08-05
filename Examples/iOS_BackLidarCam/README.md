@@ -10,7 +10,7 @@ An example using ARVideoKit for simultaneous Lidar Depth Map Capture & Video Rec
 * A **zip** file containing the stored depth maps (30fps 256 * 192). Use *ReadDepth.ipynb* in the notebook
 * a **txt** file recording the timestamp of each depth frame for future synchronization
 
-<img src="https://github.com/dirk61/iOS_BackLidarCam/blob/master/images/IMG_3964.PNG" width="400" height="800">
+<img src="https://github.com/dirk61/iOS_BackLidarCam/blob/master/images/IMG_3964.PNG" width="300" height="600">
 
 
 ##### Process the zip file of Depth maps
