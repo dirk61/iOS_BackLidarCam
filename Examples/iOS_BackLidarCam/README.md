@@ -12,7 +12,7 @@ An example using ARVideoKit for simultaneous Lidar Depth Map Capture & Video Rec
 
 
 
-<img src="/Users/gix/Downloads/IMG_3964.PNG" alt="IMG_3964" style="zoom:30%;" />
+![image](https://github.com/dirk61/iOS_BackLidarCam/master/images/1555b7ed-b9fe-4ab8-b6c9-29f40c35d2b0.png)
 
 
 
@@ -20,4 +20,4 @@ An example using ARVideoKit for simultaneous Lidar Depth Map Capture & Video Rec
 
 Follow the instructions in the Jupiter notebook. You can retrieve all the frames in arrays and do whatever you want, e.g. generate a depth video.
 
-<img src="/var/folders/8y/3qt1k3y17c539bqt36gmp_9c0000gn/T/ro.nextwave.Snappy/ro.nextwave.Snappy/F2496135-46F6-4486-8140-8FD0C74B2FC2.png" alt="F2496135-46F6-4486-8140-8FD0C74B2FC2" style="zoom:50%;" />
+![image](https://github.com/dirk61/iOS_BackLidarCam/master/images/IMG_3964.PNG)
