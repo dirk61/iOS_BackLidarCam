@@ -132,6 +132,7 @@ class DepthCapture {
                 success(self.outputURL!)
             }
             self.reset()
+            self.dstBuffer?.deallocate()
         }
     }
 }

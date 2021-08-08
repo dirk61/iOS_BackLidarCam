@@ -16,6 +16,12 @@ class SKViewController: UIViewController, ARSKViewDelegate, RenderARDelegate, Re
     @IBOutlet var SKSceneView: ARSKView!
     @IBOutlet var recordBtn: UIButton!
     @IBOutlet var pauseBtn: UIButton!
+    @IBOutlet weak var DistanceText: UITextField!
+    @IBOutlet weak var DurationText: UITextField!
+    @IBOutlet weak var WarningTex: UITextField!
+    @IBOutlet weak var imageView: UIImageView!
+    @IBOutlet weak var Instruct1: UITextView!
+    @IBOutlet weak var Instruct2: UITextView!
     let depthcapture = DepthCapture()
     let recordingQueue = DispatchQueue(label: "recordingThread")
     let caprturingQueue = DispatchQueue(label: "capturingThread", attributes: .concurrent)
@@ -24,7 +30,8 @@ class SKViewController: UIViewController, ARSKViewDelegate, RenderARDelegate, Re
     var count = 0
     let formatter = DateFormatter()
     var timestamps: String = ""
-    
+    var distanceNum = 0.0
+    var recordingTime = 0
     
     let documentsPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0] as NSString
     var txtPath:String = ""
@@ -37,8 +44,19 @@ class SKViewController: UIViewController, ARSKViewDelegate, RenderARDelegate, Re
         let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
         return paths[0]
     }
+    override func viewDidAppear(_ animated: Bool) {
+        let alertController = UIAlertController(title: "使用须知", message: "在录制开始前，将脸部放入蓝色圆内。保持脸部距离手机35cm左右。录制时，尽量保持静止。", preferredStyle: .alert)
+        alertController.addAction(UIAlertAction(title: "Confirm", style: .default, handler: nil))
+        self.present(alertController, animated: true, completion: nil)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.DistanceText.isEnabled = false
+        self.WarningTex.isEnabled = false
+        self.DurationText.isEnabled = false
+        self.Instruct1.isEditable = false
+        self.Instruct2.isEditable = false
         formatter.dateStyle = .full
         formatter.timeStyle = .full
         formatter.dateFormat = "yyyy-MM-dd'@'HH-mm-ssZZZZ"
@@ -65,8 +83,27 @@ class SKViewController: UIViewController, ARSKViewDelegate, RenderARDelegate, Re
         SKSceneView.scene?.scaleMode = .aspectFit
         
         
+        let renderer = UIGraphicsImageRenderer(size: CGSize(width: 280, height: 350))
+
+            let img = renderer.image { ctx in
+                let rect = CGRect(x: 30, y: 30, width: 220, height: 275)
+
+                // 6
+                if #available(iOS 13.0, *) {
+                    ctx.cgContext.setFillColor(CGColor(red: 0, green: 0, blue: 0, alpha: 0))
+                } else {
+                    // Fallback on earlier versions
+                }
+                ctx.cgContext.setStrokeColor(UIColor.systemBlue.cgColor)
+                ctx.cgContext.setLineWidth(3)
+
+                ctx.cgContext.addEllipse(in: rect)
+                ctx.cgContext.drawPath(using: .fillStroke)
+            }
+
+            imageView.image = img
         
-        depthcapture.prepareForRecording()
+        
         // Initialize ARVideoKit recorder
         recorder = RecordAR(ARSpriteKit: SKSceneView)
         
@@ -86,13 +123,34 @@ class SKViewController: UIViewController, ARSKViewDelegate, RenderARDelegate, Re
         
         // Configure RecordAR to store media files in local app directory
         recorder?.deleteCacheWhenExported = false
+        Timer.scheduledTimer(withTimeInterval: 0.2, repeats: true) { timer in
+            var distanceStr = String(format: "%.2f", self.distanceNum)
+            self.DistanceText.text = "距离屏幕" + distanceStr + "cm"
+            if (self.distanceNum < 31){
+                self.WarningTex.text = "离人脸过近！"
+            }
+            else if (self.distanceNum > 39){
+                self.WarningTex.text = "离人脸过远！"
+            }
+            else{
+                self.WarningTex.text = ""
+            }
+    }
     }
     func session(_ session: ARSession, didUpdate frame: ARFrame) {
         if #available(iOS 14.0, *) {
+            let depthFrame = frame.sceneDepth?.depthMap
+            if depthFrame != nil{
+            CVPixelBufferLockBaseAddress(depthFrame!, .readOnly)
+            let rowData = CVPixelBufferGetBaseAddress(depthFrame!)! + Int(128) * CVPixelBufferGetBytesPerRow(depthFrame!)
+            var f16Pixel = rowData.assumingMemoryBound(to: Float32.self)[Int(96)]
+            
+            distanceNum = Double(f16Pixel * 100)
+            }
             if isRecording == true{
                 count = count + 1
-                let depthFrame = frame.sceneDepth?.depthMap
-
+                
+                
                 
                 //                let img = UIImage(ciImage: CIImage(cvPixelBuffer:frame.capturedImage))
                 //                if let data = img.pngData() {
@@ -102,18 +160,14 @@ class SKViewController: UIViewController, ARSKViewDelegate, RenderARDelegate, Re
                 //            print(CVPixelBufferGetWidth(depthFrame!))
                 //            print(CVPixelBufferGetHeight(depthFrame!))
                 //            assert(kCVPixelFormatType_DepthFloat32 == CVPixelBufferGetPixelFormatType(depthFrame!))
-                //            CVPixelBufferLockBaseAddress(depthFrame!, .readOnly)
-                //            let rowData = CVPixelBufferGetBaseAddress(depthFrame!)! + Int(128) * CVPixelBufferGetBytesPerRow(depthFrame!)
-                //            var f16Pixel = rowData.assumingMemoryBound(to: Float32.self)[Int(96)]
-                //
-                //            print(f16Pixel)
-//                print(String(Int(Date().timeIntervalSince1970 * 1000)))
+               
+                //                print(String(Int(Date().timeIntervalSince1970 * 1000)))
                 timestamps = timestamps + String(Int(Date().timeIntervalSince1970 * 1000)) + "\n"
                 var queue = DispatchQueue(label: "dd")
                 queue.async {
                     self.depthcapture.addPixelBuffers(pixelBuffer: depthFrame!)}
-                }
-                
+            }
+            
             
         } else {
             // Fallback on earlier versions
@@ -125,7 +179,7 @@ class SKViewController: UIViewController, ARSKViewDelegate, RenderARDelegate, Re
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-       // Create a session configuration
+        // Create a session configuration
         let configuration = ARWorldTrackingConfiguration()
         
         if #available(iOS 14.0, *) {
@@ -143,6 +197,8 @@ class SKViewController: UIViewController, ARSKViewDelegate, RenderARDelegate, Re
         
         // Prepare the recorder with sessions configuration
         recorder?.prepare(configuration)
+        
+        
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -265,14 +321,74 @@ extension SKViewController {
             //Record
             
             if recorder?.status == .readyToRecord {
+                depthcapture.prepareForRecording()
                 isRecording = true
                 
-                sender.setTitle("Stop", for: .normal)
+                sender.setTitle("停止", for: .normal)
                 //                pauseBtn.setTitle("Pause", for: .normal)
                 //                pauseBtn.isEnabled = true
                 recordingQueue.async {
                     self.recorder?.record()
                 }
+                Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { timer in
+                    print("timer fired!")
+                    
+                    self.recordingTime += 1
+                    var remainder = "\(self.recordingTime % 60)"
+                    if (self.recordingTime % 60 < 10)
+                    {
+                        remainder = "0\(self.recordingTime % 60)"
+                    }
+                    self.DurationText.text = String("录制时间:0\(Int(self.recordingTime/60)):\(remainder)")
+                    //            print(timeLeft)
+                    
+                    if (!self.isRecording){
+                        timer.invalidate()
+                        self.recordingTime = 0
+                        self.DurationText.text = "录制时间:00:00"
+                        let alertController = UIAlertController(title: "完成录制", message: "录制完成。文件已保存！", preferredStyle: .alert)
+                        alertController.addAction(UIAlertAction(title: "Confirm", style: .default, handler: nil))
+                        self.present(alertController, animated: true, completion: nil)
+                    }
+                    
+                    if (self.recordingTime == 180)
+                    {
+                        timer.invalidate()
+                        self.recordingTime = 0
+                        self.DurationText.text = "录制时间:00:00"
+                        let alertController = UIAlertController(title: "达到录制时长上限", message: "录制三分钟，达到录制上线。文件已自动保存！", preferredStyle: .alert)
+                        alertController.addAction(UIAlertAction(title: "Confirm", style: .default, handler: nil))
+                        self.present(alertController, animated: true, completion: nil)
+                        
+                        self.isRecording = false
+                        self.isRecording = false
+                        do {
+                            try self.timestamps.write(to: URL(fileURLWithPath: self.txtPath), atomically: true, encoding: String.Encoding.utf8)
+                        } catch {
+                            // failed to write file – bad permissions, bad filename, missing permissions, or more likely it can't be converted to the encoding
+                        }
+                        do {
+                            try self.depthcapture.finishRecording(success: { (url: URL) -> Void in
+                                print(url.absoluteString)
+                                
+                            })
+                        } catch {
+                            print("Error while finishing depth capture.")
+                        }
+                        sender.setTitle("开始", for: .normal)
+                        //                pauseBtn.setTitle("Pause", for: .normal)
+                        //                pauseBtn.isEnabled = false
+                        self.recorder?.stop() { path in
+                            self.recorder?.export(video: path) { saved, status in
+                                DispatchQueue.main.sync {
+                                    self.exportMessage(success: saved, status: status)
+                                }
+                            }
+                        }
+                        sender.setTitle("开始", for: .normal)
+                    }
+                }
+                
             }else if recorder?.status == .recording {
                 isRecording = false
                 do {
@@ -288,7 +404,7 @@ extension SKViewController {
                 } catch {
                     print("Error while finishing depth capture.")
                 }
-                sender.setTitle("Record", for: .normal)
+                sender.setTitle("开始", for: .normal)
                 //                pauseBtn.setTitle("Pause", for: .normal)
                 //                pauseBtn.isEnabled = false
                 recorder?.stop() { path in
@@ -303,7 +419,7 @@ extension SKViewController {
             //Record with duration
             if recorder?.status == .readyToRecord {
                 isRecording = true
-                sender.setTitle("Stop", for: .normal)
+                sender.setTitle("停止", for: .normal)
                 //                pauseBtn.setTitle("Pause", for: .normal)
                 //                pauseBtn.isEnabled = false
                 recordBtn.isEnabled = false
@@ -316,6 +432,8 @@ extension SKViewController {
                                 //                                self.pauseBtn.isEnabled = false
                                 self.recordBtn.isEnabled = true
                                 self.exportMessage(success: saved, status: status)
+                                
+                                
                             }
                         }
                     }
@@ -399,3 +517,4 @@ extension SKViewController {
         
     }
 }
+
