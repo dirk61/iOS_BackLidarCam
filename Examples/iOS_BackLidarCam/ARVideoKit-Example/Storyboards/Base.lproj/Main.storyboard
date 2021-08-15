@@ -12,7 +12,7 @@
         <!--Main View Controller-->
         <scene sceneID="wdx-bS-4nS">
             <objects>
-                <viewController storyboardIdentifier="mainView" useStoryboardIdentifierAsRestorationIdentifier="YES" id="N8h-YD-r0X" customClass="MainViewController" customModule="iOS_BackLidarCam" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="mainView" useStoryboardIdentifierAsRestorationIdentifier="YES" id="N8h-YD-r0X" customClass="MainViewController" customModule="后置摄像头" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="lKA-5t-IIG">
                         <rect key="frame" x="0.0" y="0.0" width="390" height="844"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -42,7 +42,7 @@
         <!--SCNViewController-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController storyboardIdentifier="scnView" title="SCNViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="BYZ-38-t0r" customClass="SCNViewController" customModule="iOS_BackLidarCam" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="scnView" title="SCNViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="BYZ-38-t0r" customClass="SCNViewController" customModule="后置摄像头" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="390" height="844"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -209,7 +209,7 @@
         <!--SKViewController-->
         <scene sceneID="emy-Ex-RPU">
             <objects>
-                <viewController storyboardIdentifier="skView" title="SKViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="7Ze-pj-Xqd" customClass="SKViewController" customModule="iOS_BackLidarCam" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="skView" title="SKViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="7Ze-pj-Xqd" customClass="SKViewController" customModule="后置摄像头" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="ChF-2c-u6U">
                         <rect key="frame" x="0.0" y="0.0" width="390" height="790"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -235,7 +235,7 @@
                                 <rect key="frame" x="16" y="688" width="164" height="85"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <string key="text">注意：
-最长录制时间为3分钟。超时会自动结束录制！</string>
+最长录制时间为5分钟。超时会自动结束录制！</string>
                                 <color key="textColor" systemColor="systemOrangeColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>

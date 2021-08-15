@@ -15,7 +15,7 @@ import Compression
 
 class DepthCapture {
     let kErrorDomain = "DepthCapture"
-    let maxNumberOfFrame = 5000
+    let maxNumberOfFrame = 10000
     lazy var bufferSize = 256 * 182 * 4 * maxNumberOfFrame  // maxNumberOfFrame frames
     var dstBuffer: UnsafeMutablePointer<UInt8>?
     var frameCount: Int64 = 0
@@ -50,7 +50,7 @@ class DepthCapture {
         let formatter = DateFormatter()
         formatter.dateStyle = .full
         formatter.timeStyle = .full
-        formatter.dateFormat = "yyyy-MM-dd'@'HH-mm-ssZZZZ"
+        formatter.dateFormat = "yyyy_MM_dd'_'HH_mm_ss"
         
         let date = Date(timeIntervalSince1970: Date().timeIntervalSince1970)
         

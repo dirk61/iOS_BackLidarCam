@@ -59,7 +59,7 @@ class SKViewController: UIViewController, ARSKViewDelegate, RenderARDelegate, Re
         self.Instruct2.isEditable = false
         formatter.dateStyle = .full
         formatter.timeStyle = .full
-        formatter.dateFormat = "yyyy-MM-dd'@'HH-mm-ssZZZZ"
+        formatter.dateFormat = "yyyy_MM_dd'_'HH_mm_ss"
         let date = Date(timeIntervalSince1970: Date().timeIntervalSince1970)
         txtPath  = "\(documentsPath)/\(formatter.string(from: date))_DepthTimeStamp.txt"
         timestampCsvWriter = CHCSVWriter(outputStream: timestampOutput, encoding: String.Encoding.utf8.rawValue, delimiter: ",".utf16.first!)
@@ -351,12 +351,12 @@ extension SKViewController {
                         self.present(alertController, animated: true, completion: nil)
                     }
                     
-                    if (self.recordingTime == 180)
+                    if (self.recordingTime == 300)
                     {
                         timer.invalidate()
                         self.recordingTime = 0
                         self.DurationText.text = "录制时间:00:00"
-                        let alertController = UIAlertController(title: "达到录制时长上限", message: "录制三分钟，达到录制上线。文件已自动保存！", preferredStyle: .alert)
+                        let alertController = UIAlertController(title: "达到录制时长上限", message: "录制五分钟，达到录制上线。文件已自动保存！", preferredStyle: .alert)
                         alertController.addAction(UIAlertAction(title: "Confirm", style: .default, handler: nil))
                         self.present(alertController, animated: true, completion: nil)
                         

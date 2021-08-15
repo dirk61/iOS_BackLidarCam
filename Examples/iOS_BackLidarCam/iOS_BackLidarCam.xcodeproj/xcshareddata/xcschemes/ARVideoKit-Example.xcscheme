@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "FBE134B51FAAD3DD00BEC469"
-               BuildableName = "iOS_BackLidarCam.app"
+               BuildableName = "&#x540e;&#x7f6e;&#x6444;&#x50cf;&#x5934;.app"
                BlueprintName = "iOS_BackLidarCam"
                ReferencedContainer = "container:iOS_BackLidarCam.xcodeproj">
             </BuildableReference>
@@ -31,7 +31,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "FBE134B51FAAD3DD00BEC469"
-            BuildableName = "iOS_BackLidarCam.app"
+            BuildableName = "&#x540e;&#x7f6e;&#x6444;&#x50cf;&#x5934;.app"
             BlueprintName = "iOS_BackLidarCam"
             ReferencedContainer = "container:iOS_BackLidarCam.xcodeproj">
          </BuildableReference>
@@ -54,7 +54,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "FBE134B51FAAD3DD00BEC469"
-            BuildableName = "iOS_BackLidarCam.app"
+            BuildableName = "&#x540e;&#x7f6e;&#x6444;&#x50cf;&#x5934;.app"
             BlueprintName = "iOS_BackLidarCam"
             ReferencedContainer = "container:iOS_BackLidarCam.xcodeproj">
          </BuildableReference>
@@ -78,7 +78,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "FBE134B51FAAD3DD00BEC469"
-            BuildableName = "iOS_BackLidarCam.app"
+            BuildableName = "&#x540e;&#x7f6e;&#x6444;&#x50cf;&#x5934;.app"
             BlueprintName = "iOS_BackLidarCam"
             ReferencedContainer = "container:iOS_BackLidarCam.xcodeproj">
          </BuildableReference>

@@ -215,7 +215,7 @@ import PhotosUI
         let formatter = DateFormatter()
         formatter.dateStyle = .full
         formatter.timeStyle = .full
-        formatter.dateFormat = "yyyy-MM-dd'@'HH-mm-ssZZZZ"
+        formatter.dateFormat = "yyyy_MM_dd'_'HH_mm_ss"
 
         let date = Date(timeIntervalSince1970: Date().timeIntervalSince1970)
         
