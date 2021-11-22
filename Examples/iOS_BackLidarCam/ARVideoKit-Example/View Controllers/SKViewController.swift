@@ -10,7 +10,9 @@ import UIKit
 import ARKit
 import ARVideoKit
 import Photos
+import Network
 
+@available(iOS 12.0, *)
 class SKViewController: UIViewController, ARSKViewDelegate, RenderARDelegate, RecordARDelegate, ARSessionDelegate  {
     
     @IBOutlet var SKSceneView: ARSKView!
@@ -32,6 +34,7 @@ class SKViewController: UIViewController, ARSKViewDelegate, RenderARDelegate, Re
     var timestamps: String = ""
     var distanceNum = 0.0
     var recordingTime = 0
+    var broadcastStat = ""
     
     let documentsPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0] as NSString
     var txtPath:String = ""
@@ -39,6 +42,8 @@ class SKViewController: UIViewController, ARSKViewDelegate, RenderARDelegate, Re
     var timestampOutput = OutputStream.toMemory()
     var timestampCsvWriter:CHCSVWriter?
     var timestampBuffer:Data?
+    
+    var listener: NWListener?
     
     func getDocumentsDirectory() -> URL {
         let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
@@ -125,7 +130,7 @@ class SKViewController: UIViewController, ARSKViewDelegate, RenderARDelegate, Re
         recorder?.deleteCacheWhenExported = false
         Timer.scheduledTimer(withTimeInterval: 0.2, repeats: true) { timer in
             var distanceStr = String(format: "%.2f", self.distanceNum)
-            self.DistanceText.text = "距离屏幕" + distanceStr + "cm"
+            self.DistanceText.text = "距离屏幕" + distanceStr + "cm" + self.broadcastStat
             if (self.distanceNum < 31){
                 self.WarningTex.text = "离人脸过近！"
             }
@@ -180,6 +185,182 @@ class SKViewController: UIViewController, ARSKViewDelegate, RenderARDelegate, Re
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         // Create a session configuration
+        
+        do {
+            if #available(iOS 12.0, *) {
+                listener = try NWListener(using: .udp, on: 3600)
+            } else {
+                // Fallback on earlier versions
+            }
+        } catch {
+            print("exception upon creating listener")
+        }
+        
+        listener?.stateUpdateHandler = {(newState) in
+            switch newState {
+            case .ready:
+                print("ready")
+                self.broadcastStat = "连接成功"
+            default:
+                break
+            }
+        }
+        
+        listener?.newConnectionHandler = {(newConnection) in
+            newConnection.stateUpdateHandler = {newState in
+                switch newState {
+                case .setup:
+                                   print("Listener: Setup")
+               case .waiting(let error):
+                    self.broadcastStat = "连接失败"
+                   print("Listener: Waiting \(error)")
+                case .ready:
+                    print("connection ready")
+                    
+                    
+                    let strIPAddress : String = self.getIPAddress()
+                    if strIPAddress.isEmpty
+                    {print("连接失败")
+                        self.broadcastStat = "连接失败"
+//                        self.BroadCastView.text = "连接失败"
+                    }
+                    else{print("连接成功")
+                        self.broadcastStat = "连接成功"
+//                        self.BroadCastView.text = "成功连接"
+                    }
+                    print("IPAddress :: \(strIPAddress)")
+                    newConnection.receiveMessage { (data, context, isComplete, error) in
+                        let stringValue = String(decoding: data!, as: UTF8.self)
+                        if !stringValue.isEmpty
+                        {
+                            if stringValue == "true"
+                            {print("开始录制")
+                                self.broadcastStat = "开始录制"
+                            //--------------start recording
+//                            self.BroadCastView.text = "开始录制"
+                            print(stringValue)
+                                if self.recorder?.status == .readyToRecord {
+                                    self.depthcapture.prepareForRecording()
+                                    self.isRecording = true
+                                    
+                                    
+                                    //                pauseBtn.setTitle("Pause", for: .normal)
+                                    //                pauseBtn.isEnabled = true
+                                    self.recordingQueue.async {
+                                        self.recorder?.record()
+                                    }
+                                    Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { timer in
+                                        print("timer fired!")
+                                        
+                                        self.recordingTime += 1
+                                        var remainder = "\(self.recordingTime % 60)"
+                                        if (self.recordingTime % 60 < 10)
+                                        {
+                                            remainder = "0\(self.recordingTime % 60)"
+                                        }
+                                        self.DurationText.text = String("录制时间:0\(Int(self.recordingTime/60)):\(remainder)")
+                                        //            print(timeLeft)
+                                        
+                                        if (!self.isRecording){
+                                            timer.invalidate()
+                                            self.recordingTime = 0
+                                            self.DurationText.text = "录制时间:00:00"
+                                            let alertController = UIAlertController(title: "完成录制", message: "录制完成。文件已保存！", preferredStyle: .alert)
+                                            alertController.addAction(UIAlertAction(title: "Confirm", style: .default, handler: nil))
+                                            self.present(alertController, animated: true, completion: nil)
+                                        }
+                                        
+                                        if (self.recordingTime == 300)
+                                        {
+                                            timer.invalidate()
+                                            self.recordingTime = 0
+                                            self.DurationText.text = "录制时间:00:00"
+                                            let alertController = UIAlertController(title: "达到录制时长上限", message: "录制五分钟，达到录制上线。文件已自动保存！", preferredStyle: .alert)
+                                            alertController.addAction(UIAlertAction(title: "Confirm", style: .default, handler: nil))
+                                            self.present(alertController, animated: true, completion: nil)
+                                            
+                                            self.isRecording = false
+                                            self.isRecording = false
+                                            do {
+                                                try self.timestamps.write(to: URL(fileURLWithPath: self.txtPath), atomically: true, encoding: String.Encoding.utf8)
+                                            } catch {
+                                                // failed to write file – bad permissions, bad filename, missing permissions, or more likely it can't be converted to the encoding
+                                            }
+                                            do {
+                                                try self.depthcapture.finishRecording(success: { (url: URL) -> Void in
+                                                    print(url.absoluteString)
+                                                    
+                                                })
+                                            } catch {
+                                                print("Error while finishing depth capture.")
+                                            }
+                                           
+                                            //                pauseBtn.setTitle("Pause", for: .normal)
+                                            //                pauseBtn.isEnabled = false
+                                            self.recorder?.stop() { path in
+                                                self.recorder?.export(video: path) { saved, status in
+                                                    DispatchQueue.main.sync {
+                                                        self.exportMessage(success: saved, status: status)
+                                                    }
+                                                }
+                                            }
+                                           
+                                        }
+                                    }
+                                    
+                                }
+//                                self.record(self.recordBtn)
+                            //--------------start recording
+                            }
+                                else
+                                {print("停止录制")
+                                    self.broadcastStat = "停止录制"
+                                    //--------------stop recording
+//                                self.BroadCastView.text = "停止录制"
+                                   if self.recorder?.status == .recording {
+                                        self.isRecording = false
+                                        do {
+                                            try self.timestamps.write(to: URL(fileURLWithPath: self.txtPath), atomically: true, encoding: String.Encoding.utf8)
+                                        } catch {
+                                            // failed to write file – bad permissions, bad filename, missing permissions, or more likely it can't be converted to the encoding
+                                        }
+                                        do {
+                                            try self.depthcapture.finishRecording(success: { (url: URL) -> Void in
+                                                print(url.absoluteString)
+                                                
+                                            })
+                                        } catch {
+                                            print("Error while finishing depth capture.")
+                                        }
+                                        
+                                        //                pauseBtn.setTitle("Pause", for: .normal)
+                                        //                pauseBtn.isEnabled = false
+                                        self.recorder?.stop() { path in
+                                            self.recorder?.export(video: path) { saved, status in
+                                                DispatchQueue.main.sync {
+                                                    self.exportMessage(success: saved, status: status)
+                                                }
+                                            }
+                                        }
+                                    }
+                                    
+                                    
+                                    //--------------stop recording
+                                print(stringValue)
+                                }
+                        }
+                        
+                        
+                    }
+                default:
+                    break
+                }
+            }
+            newConnection.start(queue: DispatchQueue(label: "newconn"))
+        }
+        
+        listener?.start(queue: .main)
+        
         let configuration = ARWorldTrackingConfiguration()
         
         if #available(iOS 14.0, *) {
@@ -200,7 +381,34 @@ class SKViewController: UIViewController, ARSKViewDelegate, RenderARDelegate, Re
         
         
     }
-    
+    func getIPAddress() -> String {
+        var address: String?
+        var ifaddr: UnsafeMutablePointer<ifaddrs>? = nil
+        if getifaddrs(&ifaddr) == 0 {
+            var ptr = ifaddr
+            while ptr != nil {
+                defer { ptr = ptr?.pointee.ifa_next }
+
+                guard let interface = ptr?.pointee else { return "" }
+                let addrFamily = interface.ifa_addr.pointee.sa_family
+                if addrFamily == UInt8(AF_INET) || addrFamily == UInt8(AF_INET6) {
+
+                    // wifi = ["en0"]
+                    // wired = ["en2", "en3", "en4"]
+                    // cellular = ["pdp_ip0","pdp_ip1","pdp_ip2","pdp_ip3"]
+
+                    let name: String = String(cString: (interface.ifa_name))
+                    if  name == "en0" || name == "en2" || name == "en3" || name == "en4" || name == "pdp_ip0" || name == "pdp_ip1" || name == "pdp_ip2" || name == "pdp_ip3" {
+                        var hostname = [CChar](repeating: 0, count: Int(NI_MAXHOST))
+                        getnameinfo(interface.ifa_addr, socklen_t((interface.ifa_addr.pointee.sa_len)), &hostname, socklen_t(hostname.count), nil, socklen_t(0), NI_NUMERICHOST)
+                        address = String(cString: hostname)
+                    }
+                }
+            }
+            freeifaddrs(ifaddr)
+        }
+        return address ?? ""
+    }
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         
@@ -262,6 +470,7 @@ class SKViewController: UIViewController, ARSKViewDelegate, RenderARDelegate, Re
 }
 
 //MARK: - Button Action Methods
+@available(iOS 12.0, *)
 extension SKViewController {
     @IBAction func goBack(_ sender: UIButton) {
         self.dismiss(animated: true, completion: nil)
@@ -466,6 +675,7 @@ extension SKViewController {
 }
 
 //MARK: - ARVideoKit Delegate Methods
+@available(iOS 12.0, *)
 extension SKViewController {
     func frame(didRender buffer: CVPixelBuffer, with time: CMTime, using rawBuffer: CVPixelBuffer) {
         // Do some image/video processing.
@@ -490,6 +700,7 @@ extension SKViewController {
 }
 
 // MARK: - ARSKView Delegate Methods
+@available(iOS 12.0, *)
 extension SKViewController {
     //    var randoMoji:String {
     //        let emojis = ["👾", "🤓", "🔥", "😜", "😇", "🤣", "🤗"]
