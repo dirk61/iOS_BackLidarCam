@@ -35,6 +35,8 @@ class SKViewController: UIViewController, ARSKViewDelegate, RenderARDelegate, Re
     var distanceNum = 0.0
     var recordingTime = 0
     var broadcastStat = ""
+    var isControlledRecording = false
+    var startedControlledRecording = false
     
     let documentsPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0] as NSString
     var txtPath:String = ""
@@ -140,6 +142,31 @@ class SKViewController: UIViewController, ARSKViewDelegate, RenderARDelegate, Re
             else{
                 self.WarningTex.text = ""
             }
+            
+            if self.isControlledRecording && !self.startedControlledRecording{
+                self.startedControlledRecording = true
+            Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { timer in
+                print("timer fired!")
+                
+                self.recordingTime += 1
+                var remainder = "\(self.recordingTime % 60)"
+                if (self.recordingTime % 60 < 10)
+                {
+                    remainder = "0\(self.recordingTime % 60)"
+                }
+                self.DurationText.text = String("录制时间:0\(Int(self.recordingTime/60)):\(remainder)")
+                //            print(timeLeft)
+                
+                if (!self.isControlledRecording){
+                    timer.invalidate()
+                    self.recordingTime = 0
+                    self.DurationText.text = "录制时间:00:00"
+                    
+                }
+                
+                
+            }
+            }
     }
     }
     func session(_ session: ARSession, didUpdate frame: ARFrame) {
@@ -242,7 +269,7 @@ class SKViewController: UIViewController, ARSKViewDelegate, RenderARDelegate, Re
                                 if self.recorder?.status == .readyToRecord {
                                     self.depthcapture.prepareForRecording()
                                     self.isRecording = true
-                                    
+                                    self.isControlledRecording = true
                                     
                                     //                pauseBtn.setTitle("Pause", for: .normal)
                                     //                pauseBtn.isEnabled = true
@@ -252,60 +279,16 @@ class SKViewController: UIViewController, ARSKViewDelegate, RenderARDelegate, Re
                                     Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { timer in
                                         print("timer fired!")
                                         
-                                        self.recordingTime += 1
-                                        var remainder = "\(self.recordingTime % 60)"
-                                        if (self.recordingTime % 60 < 10)
-                                        {
-                                            remainder = "0\(self.recordingTime % 60)"
-                                        }
-                                        self.DurationText.text = String("录制时间:0\(Int(self.recordingTime/60)):\(remainder)")
-                                        //            print(timeLeft)
+                                        
                                         
                                         if (!self.isRecording){
                                             timer.invalidate()
                                             self.recordingTime = 0
                                             self.DurationText.text = "录制时间:00:00"
-                                            let alertController = UIAlertController(title: "完成录制", message: "录制完成。文件已保存！", preferredStyle: .alert)
-                                            alertController.addAction(UIAlertAction(title: "Confirm", style: .default, handler: nil))
-                                            self.present(alertController, animated: true, completion: nil)
+                                           
                                         }
                                         
-                                        if (self.recordingTime == 300)
-                                        {
-                                            timer.invalidate()
-                                            self.recordingTime = 0
-                                            self.DurationText.text = "录制时间:00:00"
-                                            let alertController = UIAlertController(title: "达到录制时长上限", message: "录制五分钟，达到录制上线。文件已自动保存！", preferredStyle: .alert)
-                                            alertController.addAction(UIAlertAction(title: "Confirm", style: .default, handler: nil))
-                                            self.present(alertController, animated: true, completion: nil)
-                                            
-                                            self.isRecording = false
-                                            self.isRecording = false
-                                            do {
-                                                try self.timestamps.write(to: URL(fileURLWithPath: self.txtPath), atomically: true, encoding: String.Encoding.utf8)
-                                            } catch {
-                                                // failed to write file – bad permissions, bad filename, missing permissions, or more likely it can't be converted to the encoding
-                                            }
-                                            do {
-                                                try self.depthcapture.finishRecording(success: { (url: URL) -> Void in
-                                                    print(url.absoluteString)
-                                                    
-                                                })
-                                            } catch {
-                                                print("Error while finishing depth capture.")
-                                            }
-                                           
-                                            //                pauseBtn.setTitle("Pause", for: .normal)
-                                            //                pauseBtn.isEnabled = false
-                                            self.recorder?.stop() { path in
-                                                self.recorder?.export(video: path) { saved, status in
-                                                    DispatchQueue.main.sync {
-                                                        self.exportMessage(success: saved, status: status)
-                                                    }
-                                                }
-                                            }
-                                           
-                                        }
+                                        
                                     }
                                     
                                 }
@@ -315,6 +298,8 @@ class SKViewController: UIViewController, ARSKViewDelegate, RenderARDelegate, Re
                                 else
                                 {print("停止录制")
                                     self.broadcastStat = "停止录制"
+                                    self.isControlledRecording = false
+                                    self.startedControlledRecording = false
                                     //--------------stop recording
 //                                self.BroadCastView.text = "停止录制"
                                    if self.recorder?.status == .recording {
